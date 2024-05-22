@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { productServices } from './product.services';
 import { Product } from './product.interface';
 
-//function for formatting and sending response to client
+// ----------------function for formatting and sending response to client----------------
 const sendResponse = (
   res: Response,
   statusCode: number,
@@ -17,64 +17,62 @@ const sendResponse = (
   });
 };
 
+/*
+
+----------------controller for inserting new product data in DB----------------*/
 const addProduct = async (req: Request, res: Response) => {
   try {
-    //extracting data from request body
-    const product: Product = req.body;
+    const product: Product = req.body; //extracting data from request body
 
-    //calling the service function, passing the data to it for saving in DB and receiving the response
-    const response = await productServices.addProductInDB(product);
+    const response = await productServices.addProductInDB(product); //calling the service function, passing the data to it for saving in DB and receiving the response
 
-    //sending response to client
-    sendResponse(res, 200, true, 'Product created successfully!', response);
+    sendResponse(res, 200, true, 'Product created successfully!', response); //sending response to client
   } catch (error) {
-    //sending error to client
-    sendResponse(res, 400, false, 'Product creation failed!', error);
+    sendResponse(res, 400, false, 'Product creation failed!', error); //sending error to client
   }
 };
 
+/*
+
+ --------------controller for getting all or specific product from DB----------------*/
 const getProducts = async (req: Request, res: Response) => {
   try {
-    //defining query based on request query
     let query: object = {};
     if (req.query?.searchTerm) {
-      query = { name: req.query?.searchTerm };
+      query = { name: req.query?.searchTerm }; //defining query based on request query
     }
 
-    //calling the service function, passing the query to it for searching in DB and receiving the response
-    const response = await productServices.getProductsFromDB(query);
+    const response = await productServices.getProductsFromDB(query); //calling the service function, passing the query to it for searching in DB and receiving the response
 
-    //sending response to client
-    sendResponse(res, 200, true, 'Products fetched successfully!', response);
+    sendResponse(res, 200, true, 'Products fetched successfully!', response); //sending response to client
   } catch (error) {
-    //sending error to client
-    sendResponse(res, 400, false, 'Products fetch failed!', error);
+    sendResponse(res, 400, false, 'Products fetch failed!', error); //sending error to client
   }
 };
 
+/* 
+
+--------------controller for getting specific product by id----------------*/
 const getProductById = async (req: Request, res: Response) => {
   try {
-    //extracting product id from request params
-    const productId: string = req.params?.productId;
+    const productId: string = req.params?.productId; //extracting product id from request params
 
-    //calling the service function, passing the product id to it for searching in DB and receiving the response
-    const response = await productServices.getProductByIdFromDB(productId);
+    const response = await productServices.getProductByIdFromDB(productId); //calling the service function, passing the product id to it for searching in DB and receiving the response
 
-    //sending response to client
-    sendResponse(res, 200, true, 'Product fetched successfully!', response);
+    sendResponse(res, 200, true, 'Product fetched successfully!', response); //sending response to client
   } catch (error) {
-    //sending error to client
-    sendResponse(res, 400, false, 'Product fetch failed!', error);
+    sendResponse(res, 400, false, 'Product fetch failed!', error); //sending error to client
   }
 };
 
+/*
+
+ --------------controller for updating specific product info in DB----------------*/
 const updateProductInfo = async (req: Request, res: Response) => {
   try {
-    //extracting product id from request params
-    const productId: string = req.params?.productId;
+    const productId: string = req.params?.productId; //extracting product id from request params
 
-    //extracting product data from request body
-    const product: Product = req.body;
+    const product: Product = req.body; //extracting product data from request body
 
     //calling the service function, passing the product id to it for updating in DB and receiving the response
     const response = await productServices.updateProductInfo(
@@ -82,11 +80,9 @@ const updateProductInfo = async (req: Request, res: Response) => {
       product,
     );
 
-    //sending response to client
-    sendResponse(res, 200, true, 'Product updated successfully!', response);
+    sendResponse(res, 200, true, 'Product updated successfully!', response); //sending response to client
   } catch (error) {
-    //sending error to client
-    sendResponse(res, 400, false, 'Product update failed!', error);
+    sendResponse(res, 400, false, 'Product update failed!', error); //sending error to client
   }
 };
 
