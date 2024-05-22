@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { productServices } from './product.services';
 import { Product } from './product.interface';
+import productValidationSchema from './product.validation';
 
 // ----------------function for formatting and sending response to client----------------
 const sendResponse = (
@@ -24,7 +25,9 @@ const addProduct = async (req: Request, res: Response) => {
   try {
     const product: Product = req.body; //extracting data from request body
 
-    const response = await productServices.addProductInDB(product); //calling the service function, passing the data to it for saving in DB and receiving the response
+    const zodParsedData = productValidationSchema.parse(product); //validating extracted data using zod
+
+    const response = await productServices.addProductInDB(zodParsedData); //calling the service function, passing the data to it for saving in DB and receiving the response
 
     sendResponse(res, 200, true, 'Product created successfully!', response); //sending response to client
   } catch (error) {
