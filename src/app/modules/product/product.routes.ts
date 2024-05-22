@@ -11,4 +11,6 @@ router.get('/api/products/:productId', productControllers.getProductById); // ro
 
 router.put('/api/products/:productId', productControllers.updateProductInfo); // route for updating specific product info in DB.
 
+router.delete('/api/products/:productId', productControllers.deleteProduct); // route for deleting specific product from DB.
+
 export const productRoutes = router;

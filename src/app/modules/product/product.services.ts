@@ -1,5 +1,7 @@
+import { response } from 'express';
 import { Product } from './product.interface';
 import { ProductModel } from './product.model';
+import { after } from 'node:test';
 
 //service function for inserting product data in DB
 const addProductInDB = async (product: Product) => {
@@ -9,6 +11,7 @@ const addProductInDB = async (product: Product) => {
 
 //service function for fetching all or specific product data from DB
 const getProductsFromDB = async (query: object) => {
+  console.log(query);
   const response = await ProductModel.find(query);
   return response;
 };
@@ -23,8 +26,6 @@ const getProductByIdFromDB = async (productId: string) => {
 const updateProductInfo = async (productId: string, product: Product) => {
   const query = { _id: productId };
 
-  //   const options = { upsert: true };
-
   const updatedInfo = {
     $set: {
       name: product.name,
@@ -37,14 +38,17 @@ const updateProductInfo = async (productId: string, product: Product) => {
     },
   };
 
-  const response = await ProductModel.findOneAndUpdate(
-    query,
-    updatedInfo,
-    // options,
-  );
+  const response = await ProductModel.findOneAndUpdate(query, updatedInfo, {
+    returnDocument: 'after',
+  });
 
-  console.log(response);
+  return response;
+};
 
+//service function for deleting product from DB
+const deleteProductFromDB = async (productId: string) => {
+  const query = { _id: productId };
+  const response = ProductModel.findOneAndDelete(query);
   return response;
 };
 
@@ -53,4 +57,5 @@ export const productServices = {
   getProductsFromDB,
   getProductByIdFromDB,
   updateProductInfo,
+  deleteProductFromDB,
 };

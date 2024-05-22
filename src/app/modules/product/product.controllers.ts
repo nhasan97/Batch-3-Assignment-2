@@ -86,9 +86,25 @@ const updateProductInfo = async (req: Request, res: Response) => {
   }
 };
 
+/* 
+
+--------------controller for deleting specific product from DB----------------*/
+const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const productId: string = req.params?.productId; //extracting product id from request params
+
+    const response = await productServices.deleteProductFromDB(productId); //calling the service function, passing the product id to it for deleting product from DB and receiving the response
+
+    sendResponse(res, 200, true, 'Product deleted successfully!', response); //sending response to client
+  } catch (error) {
+    sendResponse(res, 400, false, 'Product delete failed!', error); //sending error to client
+  }
+};
+
 export const productControllers = {
   addProduct,
   getProducts,
   getProductById,
   updateProductInfo,
+  deleteProduct,
 };
