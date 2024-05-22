@@ -1,4 +1,7 @@
-export type Variant = { type: string; value: string };
+export type Variant = {
+  type: string;
+  value: string;
+};
 
 export type Inventory = {
   quantity: number;
