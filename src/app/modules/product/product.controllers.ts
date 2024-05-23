@@ -42,7 +42,28 @@ const getProducts = async (req: Request, res: Response) => {
   try {
     let query: object = {};
     if (req.query?.searchTerm) {
-      query = { name: req.query?.searchTerm }; //defining query based on request query
+      query = {
+        $or: [
+          {
+            name: {
+              $regex: req.query?.searchTerm,
+              $options: 'i',
+            },
+          },
+          {
+            category: {
+              $regex: req.query?.searchTerm,
+              $options: 'i',
+            },
+          },
+          {
+            description: {
+              $regex: req.query?.searchTerm,
+              $options: 'i',
+            },
+          },
+        ],
+      }; //defining query based on request query
     }
 
     const response = await productServices.getProductsFromDB(query); //calling the service function, passing the query to it for searching in DB and receiving the response
