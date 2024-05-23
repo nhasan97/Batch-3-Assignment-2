@@ -1,3 +1,4 @@
+import { Order } from '../modules/order/order.interface';
 import { Product } from '../modules/product/product.interface';
 import { Response } from 'express';
 
@@ -6,14 +7,21 @@ const sendResponse = (
   res: Response,
   statusCode: number,
   operationalStatus: boolean,
-  message: string,
-  toSend: Product | unknown,
+  message: string = 'Something went wrong!',
+  toSend: Product | Order | unknown = null,
 ) => {
-  res.status(statusCode).json({
-    success: operationalStatus,
-    message: message,
-    data: toSend,
-  });
+  if (operationalStatus === true) {
+    res.status(statusCode).json({
+      success: operationalStatus,
+      message: message,
+      data: toSend,
+    });
+  } else {
+    res.status(statusCode).json({
+      success: operationalStatus,
+      message: message,
+    });
+  }
 };
 
 // ----------function for managing product inventory based on order placement----------

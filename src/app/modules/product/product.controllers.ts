@@ -2,21 +2,7 @@ import { Request, Response } from 'express';
 import { productServices } from './product.services';
 import { Product } from './product.interface';
 import productValidationSchema from './product.validation';
-
-// ----------------function for formatting and sending response to client----------------
-const sendResponse = (
-  res: Response,
-  statusCode: number,
-  operationalStatus: boolean,
-  message: string,
-  toSend: Product | unknown,
-) => {
-  res.status(statusCode).json({
-    success: operationalStatus,
-    message: message,
-    data: toSend,
-  });
-};
+import sendResponse from '../../utilities';
 
 /*
 
@@ -68,7 +54,11 @@ const getProducts = async (req: Request, res: Response) => {
 
     const response = await productServices.getProductsFromDB(query); //calling the service function, passing the query to it for searching in DB and receiving the response
 
-    sendResponse(res, 200, true, 'Products fetched successfully!', response); //sending response to client
+    if (response.length > 0) {
+      sendResponse(res, 200, true, 'Products fetched successfully!', response); //sending response to client
+    } else {
+      sendResponse(res, 200, false, 'No product found!'); //sending response to client
+    }
   } catch (error) {
     sendResponse(res, 400, false, 'Products fetch failed!', error); //sending error to client
   }
@@ -83,7 +73,11 @@ const getProductById = async (req: Request, res: Response) => {
 
     const response = await productServices.getProductByIdFromDB(productId); //calling the service function, passing the product id to it for searching in DB and receiving the response
 
-    sendResponse(res, 200, true, 'Product fetched successfully!', response); //sending response to client
+    if (response !== null) {
+      sendResponse(res, 200, true, 'Product fetched successfully!', response); //sending response to client
+    } else {
+      sendResponse(res, 200, false, 'No such product found!'); //sending response to client
+    }
   } catch (error) {
     sendResponse(res, 400, false, 'Product fetch failed!', error); //sending error to client
   }
@@ -106,7 +100,11 @@ const updateProductInfo = async (req: Request, res: Response) => {
       zodParsedData,
     );
 
-    sendResponse(res, 200, true, 'Product updated successfully!', response); //sending response to client
+    if (response !== null) {
+      sendResponse(res, 200, true, 'Product updated successfully!', response); //sending response to client
+    } else {
+      sendResponse(res, 200, false, 'No such product found!'); //sending response to client
+    }
   } catch (error) {
     sendResponse(res, 400, false, 'Product update failed!', error); //sending error to client
   }
@@ -121,7 +119,11 @@ const deleteProduct = async (req: Request, res: Response) => {
 
     const response = await productServices.deleteProductFromDB(productId); //calling the service function, passing the product id to it for deleting product from DB and receiving the response
 
-    sendResponse(res, 200, true, 'Product deleted successfully!', response); //sending response to client
+    if (response !== null) {
+      sendResponse(res, 200, true, 'Product deleted successfully!', null); //sending response to client
+    } else {
+      sendResponse(res, 200, false, 'No such product found!'); //sending response to client
+    }
   } catch (error) {
     sendResponse(res, 400, false, 'Product delete failed!', error); //sending error to client
   }

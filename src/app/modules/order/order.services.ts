@@ -25,16 +25,10 @@ const saveOrderInDB = async (orderDetails: Order) => {
 
       return response;
     } else {
-      return {
-        success: false,
-        message: 'Insufficient quantity available in inventory',
-      };
+      return 1;
     }
   } else {
-    return {
-      success: false,
-      message: 'Product not found',
-    };
+    return 0;
   }
 };
 
