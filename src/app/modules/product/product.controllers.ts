@@ -77,10 +77,12 @@ const updateProductInfo = async (req: Request, res: Response) => {
 
     const product: Product = req.body; //extracting product data from request body
 
+    const zodParsedData = productValidationSchema.parse(product); //validating extracted data using zod
+
     //calling the service function, passing the product id to it for updating in DB and receiving the response
     const response = await productServices.updateProductInfo(
       productId,
-      product,
+      zodParsedData,
     );
 
     sendResponse(res, 200, true, 'Product updated successfully!', response); //sending response to client

@@ -1,6 +1,7 @@
 import { Product } from './product.interface';
 import { ProductModel } from './product.model';
 import { manageInventory } from '../../utilities';
+import { inventoryValidationSchema } from './product.validation';
 
 //service function for inserting product data in DB
 const addProductInDB = async (product: Product) => {
@@ -58,14 +59,20 @@ const updateProductInventory = async (
   ); /*passing the previous and ordered quantities to manageInventory function 
   for calculating new remaining quantity and inStock status and receiving them*/
 
+  const updatedInfo = {
+    quantity: newQuantity,
+    inStock: newInStockStatus,
+  };
+  const zodParsedData = inventoryValidationSchema.parse(updatedInfo); //validating data using zod
+
   //updating inventory in DB
   const response = await ProductModel.updateOne(
     { _id: productId },
     {
       $set: {
         inventory: {
-          quantity: newQuantity,
-          inStock: newInStockStatus,
+          quantity: zodParsedData.quantity,
+          inStock: zodParsedData.inStock,
         },
       },
     },

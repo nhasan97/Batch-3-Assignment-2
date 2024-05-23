@@ -7,7 +7,7 @@ const variantValidationSchema = z.object({
   value: z.string(),
 });
 
-const inventoryValidationSchema = z.object({
+export const inventoryValidationSchema = z.object({
   quantity: z.number(),
   inStock: z.boolean(),
 });
