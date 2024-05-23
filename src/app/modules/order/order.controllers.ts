@@ -28,7 +28,12 @@ const getOrders = async (req: Request, res: Response) => {
   try {
     let query: object = {};
     if (req.query?.email) {
-      query = { email: req.query?.email }; //defining query based on request query
+      query = {
+        email: {
+          $regex: req.query?.email,
+          $options: 'i',
+        },
+      }; //defining query based on request query
     }
 
     const response = await orderServices.getOrdersFromDB(query); //calling the service function, passing the query to it for searching in DB and receiving the response
