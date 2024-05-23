@@ -21,6 +21,25 @@ const saveOrder = async (req: Request, res: Response) => {
   }
 };
 
+/*
+
+ --------------controller for getting all or specific orders from DB----------------*/
+const getOrders = async (req: Request, res: Response) => {
+  try {
+    let query: object = {};
+    if (req.query?.email) {
+      query = { email: req.query?.email }; //defining query based on request query
+    }
+
+    const response = await orderServices.getOrdersFromDB(query); //calling the service function, passing the query to it for searching in DB and receiving the response
+
+    sendResponse(res, 200, true, 'Orders fetched successfully!', response); //sending response to client
+  } catch (error) {
+    sendResponse(res, 400, false, 'Orders fetch failed!', error); //sending error to client
+  }
+};
+
 export const orderControllers = {
   saveOrder,
+  getOrders,
 };

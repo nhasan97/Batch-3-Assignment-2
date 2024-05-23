@@ -38,6 +38,13 @@ const saveOrderInDB = async (orderDetails: Order) => {
   }
 };
 
+//service function for fetching all or specific product data from DB
+const getOrdersFromDB = async (query: object) => {
+  const response = await orderModel.find(query);
+  return response;
+};
+
 export const orderServices = {
   saveOrderInDB,
+  getOrdersFromDB,
 };
