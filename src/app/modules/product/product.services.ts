@@ -1,7 +1,6 @@
-import { response } from 'express';
 import { Product } from './product.interface';
 import { ProductModel } from './product.model';
-import { after } from 'node:test';
+import { manageInventory } from '../../utilities';
 
 //service function for inserting product data in DB
 const addProductInDB = async (product: Product) => {
@@ -45,7 +44,39 @@ const updateProductInfo = async (productId: string, product: Product) => {
   return response;
 };
 
-//service function for deleting product from DB
+/*
+
+service function for updating inventory in DB based on order placement*/
+const updateProductInventory = async (
+  productId: any,
+  previousQuantity: number,
+  orderedQuantity: number,
+) => {
+  const { newQuantity, newInStockStatus } = manageInventory(
+    previousQuantity,
+    orderedQuantity,
+  ); /*passing the previous and ordered quantities to manageInventory function 
+  for calculating new remaining quantity and inStock status and receiving them*/
+
+  //updating inventory in DB
+  const response = await ProductModel.updateOne(
+    { _id: productId },
+    {
+      $set: {
+        inventory: {
+          quantity: newQuantity,
+          inStock: newInStockStatus,
+        },
+      },
+    },
+  );
+
+  return response;
+};
+
+/*
+
+service function for deleting product from DB*/
 const deleteProductFromDB = async (productId: string) => {
   const query = { _id: productId };
   const response = ProductModel.findOneAndDelete(query);
@@ -57,5 +88,6 @@ export const productServices = {
   getProductsFromDB,
   getProductByIdFromDB,
   updateProductInfo,
+  updateProductInventory,
   deleteProductFromDB,
 };
