@@ -11,7 +11,6 @@ const addProductInDB = async (product: Product) => {
 
 //service function for fetching all or specific product data from DB
 const getProductsFromDB = async (query: object) => {
-  console.log(query);
   const response = await ProductModel.find(query);
   return response;
 };
